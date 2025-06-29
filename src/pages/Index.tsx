@@ -8,12 +8,14 @@ import { HowItWorksSection } from "@/components/HowItWorksSection";
 import { FeaturesSection } from "@/components/FeaturesSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { Footer } from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export interface BrandIdentity {
   brandName: string;
   slogan: string;
   logoDescription: string;
-  logoImage?: string; // For DALL-E generated logos
+  logoImage?: string;
   colorPalette: {
     name: string;
     hex: string;
@@ -37,28 +39,29 @@ const Index = () => {
     
     setIsGenerating(true);
     
-    // TODO: Replace with actual OpenAI API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    const mockResult: BrandIdentity = {
-      brandName: "Sparkforge",
-      slogan: "Ignite. Create. Thrive.",
-      logoDescription: "A minimalist geometric spark transforming into abstract forge flames. Clean angular lines with subtle gradient effects, representing innovation and the forging of ideas into reality.",
-      colorPalette: [
-        { name: "Electric Blue", hex: "#2563EB", description: "Primary - Innovation & Trust" },
-        { name: "Vibrant Orange", hex: "#F97316", description: "Secondary - Energy & Creativity" },
-        { name: "Warm White", hex: "#FEFEFE", description: "Background - Clean & Modern" },
-        { name: "Charcoal Gray", hex: "#374151", description: "Text - Professional" },
-        { name: "Soft Lavender", hex: "#E0E7FF", description: "Accent - Playful Elegance" }
-      ],
-      fontPair: {
-        header: "Inter Bold",
-        body: "Inter Regular"
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-brand', {
+        body: {
+          businessIdea,
+          industry,
+          brandTone
+        }
+      });
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        toast.error('Failed to generate brand identity. Please try again.');
+        return;
       }
-    };
-    
-    setBrandResult(mockResult);
-    setIsGenerating(false);
+
+      setBrandResult(data);
+      toast.success('Brand identity generated successfully!');
+    } catch (error) {
+      console.error('Error generating brand:', error);
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const resetForm = () => {

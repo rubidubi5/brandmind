@@ -84,11 +84,11 @@ export const BrandResult = ({ brandResult, onGenerateNew }: BrandResultProps) =>
         </CardContent>
       </Card>
 
-      {/* Logo Description */}
+      {/* Logo */}
       <Card className="shadow-lg">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            Logo Concept
+            AI-Generated Logo
             <Button
               variant="ghost"
               size="sm"
@@ -99,12 +99,23 @@ export const BrandResult = ({ brandResult, onGenerateNew }: BrandResultProps) =>
           </CardTitle>
         </CardHeader>
         <CardContent>
+          {brandResult.logoImage && (
+            <div className="mb-6 flex justify-center">
+              <div className="bg-white p-8 rounded-lg shadow-md border-2 border-gray-100">
+                <img 
+                  src={brandResult.logoImage} 
+                  alt={`${brandResult.brandName} Logo`}
+                  className="max-w-xs max-h-48 object-contain"
+                />
+              </div>
+            </div>
+          )}
           <p className="text-gray-700 leading-relaxed mb-4">
             {brandResult.logoDescription}
           </p>
           <div className="bg-gray-50 p-4 rounded-lg">
             <p className="text-sm text-gray-600">
-              💡 <strong>Pro Tip:</strong> Share this description with a designer or use it with AI image generators like DALL-E or Midjourney
+              💡 <strong>Pro Tip:</strong> Right-click the logo above to save it, or share this description with a designer for variations
             </p>
           </div>
         </CardContent>
