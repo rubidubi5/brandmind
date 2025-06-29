@@ -1,0 +1,191 @@
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Copy, RefreshCw, Download } from "lucide-react";
+import { BrandIdentity } from "@/pages/Index";
+import { toast } from "sonner";
+
+interface BrandResultProps {
+  brandResult: BrandIdentity;
+  onGenerateNew: () => void;
+}
+
+export const BrandResult = ({ brandResult, onGenerateNew }: BrandResultProps) => {
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success(`${label} copied to clipboard!`);
+  };
+
+  const copyColorHex = (hex: string, name: string) => {
+    navigator.clipboard.writeText(hex);
+    toast.success(`${name} (${hex}) copied!`);
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* Header with actions */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-3xl font-bold text-gray-800">Your Brand Identity</h2>
+          <p className="text-gray-600">Fresh from the creative AI minds at BrandMind</p>
+        </div>
+        <Button 
+          onClick={onGenerateNew}
+          variant="outline"
+          className="flex items-center gap-2"
+        >
+          <RefreshCw className="h-4 w-4" />
+          Generate New
+        </Button>
+      </div>
+
+      {/* Brand Name */}
+      <Card className="shadow-lg">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            Brand Name
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => copyToClipboard(brandResult.brandName, "Brand name")}
+            >
+              <Copy className="h-4 w-4" />
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">
+            {brandResult.brandName}
+          </div>
+          <p className="text-gray-600">Perfect for domain registration and trademark</p>
+        </CardContent>
+      </Card>
+
+      {/* Slogan */}
+      <Card className="shadow-lg">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            Brand Slogan
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => copyToClipboard(brandResult.slogan, "Slogan")}
+            >
+              <Copy className="h-4 w-4" />
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-semibold text-gray-800 mb-2 italic">
+            "{brandResult.slogan}"
+          </div>
+          <p className="text-gray-600">Inspiring and memorable tagline for your brand</p>
+        </CardContent>
+      </Card>
+
+      {/* Logo Description */}
+      <Card className="shadow-lg">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            Logo Concept
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => copyToClipboard(brandResult.logoDescription, "Logo description")}
+            >
+              <Copy className="h-4 w-4" />
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-gray-700 leading-relaxed mb-4">
+            {brandResult.logoDescription}
+          </p>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <p className="text-sm text-gray-600">
+              💡 <strong>Pro Tip:</strong> Share this description with a designer or use it with AI image generators like DALL-E or Midjourney
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Color Palette */}
+      <Card className="shadow-lg">
+        <CardHeader>
+          <CardTitle>Color Palette</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {brandResult.colorPalette.map((color, index) => (
+              <div 
+                key={index}
+                className="group cursor-pointer"
+                onClick={() => copyColorHex(color.hex, color.name)}
+              >
+                <div 
+                  className="w-full h-20 rounded-lg shadow-md mb-3 transition-transform group-hover:scale-105"
+                  style={{ backgroundColor: color.hex }}
+                />
+                <div className="text-center">
+                  <h4 className="font-semibold text-gray-800">{color.name}</h4>
+                  <p className="text-sm text-gray-600 mb-1">{color.hex}</p>
+                  <p className="text-xs text-gray-500">{color.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 bg-blue-50 p-4 rounded-lg">
+            <p className="text-sm text-blue-700">
+              🎨 Click any color to copy its hex code. These colors work harmoniously together across all brand materials.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Font Pair */}
+      <Card className="shadow-lg">
+        <CardHeader>
+          <CardTitle>Recommended Typography</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div>
+              <Badge variant="secondary" className="mb-2">Header Font</Badge>
+              <p className="text-2xl font-bold text-gray-800">{brandResult.fontPair.header}</p>
+              <p className="text-sm text-gray-600">For headlines, titles, and important text</p>
+            </div>
+            <div>
+              <Badge variant="secondary" className="mb-2">Body Font</Badge>
+              <p className="text-lg text-gray-700">{brandResult.fontPair.body}</p>
+              <p className="text-sm text-gray-600">For paragraphs, descriptions, and general content</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Download/Export Options */}
+      <Card className="shadow-lg bg-gradient-to-r from-purple-50 to-blue-50">
+        <CardContent className="p-6">
+          <div className="text-center">
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">
+              Ready to bring your brand to life?
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Take these elements to a designer, or use them as a foundation for your brand guidelines
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button className="bg-green-600 hover:bg-green-700">
+                <Download className="mr-2 h-4 w-4" />
+                Export Brand Kit
+              </Button>
+              <Button variant="outline">
+                Share Brand Identity
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
