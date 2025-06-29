@@ -91,10 +91,16 @@ The application is configured for Replit deployment with the following approach:
 - **Node.js**: ES modules support with TypeScript compilation
 - **Static Hosting**: Integrated with Express for SPA routing
 
-## Changelog
+## Recent Changes
 
-Changelog:
-- June 29, 2025. Initial setup
+- June 29, 2025: Successfully migrated from Lovable to Replit
+  - Replaced Supabase with local Express API and PostgreSQL database
+  - Moved brand generation from edge functions to server-side endpoint `/api/generate-brand`
+  - Secured OpenAI API key in environment variables
+  - Implemented functional export brand kit feature (downloads markdown file)
+  - Added share functionality for brand identity
+  - Removed all Supabase dependencies and code
+  - Database schema deployed and working with Drizzle ORM
 
 ## User Preferences
 
