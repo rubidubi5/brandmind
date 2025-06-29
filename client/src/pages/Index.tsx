@@ -8,7 +8,6 @@ import { HowItWorksSection } from "@/components/HowItWorksSection";
 import { FeaturesSection } from "@/components/FeaturesSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { Footer } from "@/components/Footer";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export interface BrandIdentity {
@@ -40,21 +39,27 @@ const Index = () => {
     setIsGenerating(true);
     
     try {
-      const { data, error } = await supabase.functions.invoke('generate-brand', {
-        body: {
+      const response = await fetch('/api/generate-brand', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           businessIdea,
           industry,
           brandTone
-        }
+        }),
       });
 
-      if (error) {
-        console.error('Supabase function error:', error);
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('API error:', errorData);
         toast.error('Failed to generate brand identity. Please try again.');
         return;
       }
 
-      setBrandResult(data);
+      const brandIdentity = await response.json();
+      setBrandResult(brandIdentity);
       toast.success('Brand identity generated successfully!');
     } catch (error) {
       console.error('Error generating brand:', error);
